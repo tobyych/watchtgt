@@ -1,0 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.base-layout {
+  max-width: 80%;
+  padding: 20px;
+}
+
+.navbar .link {
+  float: left;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+}
