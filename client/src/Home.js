@@ -1,22 +1,57 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import { Button, InputGroup, Input, InputGroupAddon } from 'reactstrap';
+import { Button, InputGroup, Input, InputGroupAddon } from "reactstrap";
 
-import './Home.css';
+import { Link } from "react-router-dom";
 
-export class Home extends Component {
+import "./Home.css";
+
+class Home extends Component {
+  constructor() {
+    super();
+    this.state = {
+      roomToken: "",
+    };
+  }
+
+  createRoom() {
+    const randomNumber = Math.floor(Math.random() * 90000) + 10000;
+    console.log(randomNumber);
+    return randomNumber;
+  }
+
+  onChange = (e) => {
+    this.setState({ roomToken: e.target.value });
+  };
+
   render() {
     return (
       <div className="home-container">
-        <Button className="button">Create a room</Button>
+        <Button onClick={this.createRoom} className="button">
+          Create a room
+        </Button>
         <InputGroup className="input-grp">
-          <Input />
+          <Input
+            placeholder="Enter a room token"
+            value={this.state.roomToken}
+            onChange={this.onChange}
+          />
           <InputGroupAddon addonType="append">
-            <Button color="secondary">Go to room</Button>
+            <Link
+              onClick={this.setRoomToken}
+              type="button"
+              className="btn btn-primary"
+              to={{
+                pathname: "/room",
+                roomToken: this.state.roomToken,
+              }}
+            >
+              Go to room
+            </Link>
           </InputGroupAddon>
         </InputGroup>
       </div>
-    )
+    );
   }
 }
 
