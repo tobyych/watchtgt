@@ -9,6 +9,7 @@
 .player {
   grid-area: 1/1/2/2;
   border: solid black;
+  position: relative;
 }
 
 .playlist {

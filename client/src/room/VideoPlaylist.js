@@ -1,56 +1,68 @@
 import React, { Component } from "react";
 
-import { ListGroup, Button } from 'reactstrap';
+import { ListGroup, Button } from "reactstrap";
 
-import './VideoPlaylist.css';
+import "./VideoPlaylist.css";
 
 export class VideoPlaylist extends Component {
   constructor() {
     super();
     this.state = {
-      playlistInput: '',
-      playlist: []
+      playlistInput: "",
+      playlist: [],
     };
   }
 
   appendPlaylistItem = () => {
-    this.setState({ playlist: [...this.state.playlist, this.state.playlistInput], playlistInput: '' });
+    this.setState({
+      playlist: [...this.state.playlist, this.state.playlistInput],
+      playlistInput: "",
+    });
   };
 
   changeInput = (e) => {
     this.setState({ playlistInput: e.target.value });
   };
 
-  changeVideo() {
+  changeVideo = (idx) => {
     //TODO: change the VideoPlayer's state and let it re-render
-  }
+    this.props.setVideoId(this.state.playlist[idx]);
+  };
 
   listItems() {
-    return this.state.playlist.map(item => {
+    return this.state.playlist.map((item, idx) => {
       return (
-        <li className="playlist-item" key={`${Math.floor(Math.random() * 10000) + 1}`} >
+        <li className="playlist-item" key={idx}>
           <p className="playlist-item-text">{item}</p>
           <div className="playlist-item-append">
-            <Button className="playlist-item-button" onClick={this.changeVideo}>Go</Button>
+            <Button
+              className="playlist-item-button"
+              onClick={() => this.changeVideo(idx)}
+            >
+              Go
+            </Button>
           </div>
-        </li >
+        </li>
       );
-    })
+    });
   }
 
   render() {
     return (
       <ListGroup>
         <li className="playlist-item">
-          <input className="playlist-item-input" onChange={this.changeInput} value={this.state.playlistInput} />
+          <input
+            className="playlist-item-input"
+            onChange={this.changeInput}
+            value={this.state.playlistInput}
+          />
           <div className="playlist-item-append">
-            <Button className="playlist-item-button" onClick={this.appendPlaylistItem}>Add</Button>
-          </div>
-        </li>
-        <li className="playlist-item">
-          <p className="playlist-item-text">Hello</p>
-          <div className="playlist-item-append">
-            <Button className="playlist-item-button">Go</Button>
+            <Button
+              className="playlist-item-button"
+              onClick={this.appendPlaylistItem}
+            >
+              Add
+            </Button>
           </div>
         </li>
         {this.listItems()}

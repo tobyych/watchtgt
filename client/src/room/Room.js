@@ -9,20 +9,24 @@ import VideoPlaylist from "./VideoPlaylist";
 import "./Room.css";
 
 export class Room extends Component {
-  state = { roomToken: "" };
+  state = { roomToken: "", currentVideoId: "" };
 
   componentDidMount() {
     this.setState({ roomToken: this.props.location.roomToken });
   }
 
+  setVideoId = (videoId) => {
+    this.setState({ currentVideoId: videoId });
+  };
+
   render() {
     return (
       <div className="room-container">
         <div className="player">
-          <VideoPlayer />
+          <VideoPlayer videoId={this.state.currentVideoId} />
         </div>
         <div className="playlist">
-          <VideoPlaylist />
+          <VideoPlaylist setVideoId={this.setVideoId} />
         </div>
         <div className="chat">
           <Chat />
