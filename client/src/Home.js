@@ -11,13 +11,13 @@ class Home extends Component {
     super();
     this.state = {
       roomToken: "",
+      randomToken: ""
     };
   }
 
-  createRoom() {
+  createRoom = () => {
     const randomNumber = Math.floor(Math.random() * 90000) + 10000;
-    console.log(randomNumber);
-    return randomNumber;
+    this.setState({ randomToken: `${randomNumber}` });
   }
 
   onChange = (e) => {
@@ -30,6 +30,7 @@ class Home extends Component {
         <Button onClick={this.createRoom} className="button">
           Create a room
         </Button>
+        <p>{this.state.randomToken}</p>
         <InputGroup className="input-grp">
           <Input
             placeholder="Enter a room token"

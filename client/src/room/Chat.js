@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import chatSocketClient from '../apis/chatSocketClient';
+import chatSocketClient from '../apis/socketClient';
 
 export class Chat extends Component {
   messagesEndRef = React.createRef();

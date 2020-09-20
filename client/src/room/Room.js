@@ -23,13 +23,13 @@ export class Room extends Component {
     return (
       <div className="room-container">
         <div className="player">
-          <VideoPlayer videoId={this.state.currentVideoId} />
+          <VideoPlayer roomToken={this.state.roomToken} videoId={this.state.currentVideoId} />
         </div>
         <div className="playlist">
-          <VideoPlaylist setVideoId={this.setVideoId} />
+          <VideoPlaylist roomToken={this.state.roomToken} setVideoId={this.setVideoId} />
         </div>
         <div className="chat">
-          <Chat />
+          <Chat roomToken={this.state.roomToken} />
         </div>
       </div>
     );

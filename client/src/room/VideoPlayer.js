@@ -40,7 +40,7 @@ class VideoPlayer extends Component {
             onReady={this.onReady}
           />
         </div>
-        <VideoControl className="video-control" player={this.state.player} />
+        <VideoControl roomToken={this.props.roomToken} className="video-control" player={this.state.player} />
       </Fragment>
     );
   }
