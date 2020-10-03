@@ -12,7 +12,13 @@ export class Room extends Component {
   state = { roomToken: "", currentVideoId: "" };
 
   componentDidMount() {
-    this.setState({ roomToken: this.props.location.roomToken });
+    // this.setState({ roomToken: this.props.location.roomToken });
+    if (sessionStorage.getItem("roomToken")) {
+      this.setState({ roomToken: sessionStorage.getItem("roomToken") });
+    } else {
+      const { history } = this.props;
+      history.push("/");
+    }
   }
 
   setVideoId = (videoId) => {
@@ -23,13 +29,13 @@ export class Room extends Component {
     return (
       <div className="room-container">
         <div className="player">
-          <VideoPlayer roomToken={this.state.roomToken} videoId={this.state.currentVideoId} />
+          <VideoPlayer videoId={this.state.currentVideoId} />
         </div>
         <div className="playlist">
-          <VideoPlaylist roomToken={this.state.roomToken} setVideoId={this.setVideoId} />
+          <VideoPlaylist setVideoId={this.setVideoId} />
         </div>
         <div className="chat">
-          <Chat roomToken={this.state.roomToken} />
+          <Chat />
         </div>
       </div>
     );

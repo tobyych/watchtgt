@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-
 import { ListGroup, Button } from "reactstrap";
+
+import socketClient from "../apis/socketClient";
 
 import "./VideoPlaylist.css";
 
@@ -14,6 +15,11 @@ export class VideoPlaylist extends Component {
   }
 
   appendPlaylistItem = () => {
+    socketClient.emit(
+      "addToPlaylist",
+      sessionStorage.getItem("roomToken"),
+      this.state.playlistInput
+    );
     this.setState({
       playlist: [...this.state.playlist, this.state.playlistInput],
       playlistInput: "",
@@ -45,6 +51,14 @@ export class VideoPlaylist extends Component {
         </li>
       );
     });
+  }
+
+  componentWillMount() {
+    socketClient.on("addToPlaylist", (roomToken, playlistItem) => {
+      console.log(roomToken);
+      console.log(playlistItem);
+    });
+    this.forceUpdate();
   }
 
   render() {

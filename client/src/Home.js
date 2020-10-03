@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import socketClient from "./apis/socketClient";
 
 import { Button, InputGroup, Input, InputGroupAddon } from "reactstrap";
 
@@ -11,17 +12,22 @@ class Home extends Component {
     super();
     this.state = {
       roomToken: "",
-      randomToken: ""
+      randomToken: "",
     };
   }
 
   createRoom = () => {
     const randomNumber = Math.floor(Math.random() * 90000) + 10000;
     this.setState({ randomToken: `${randomNumber}` });
-  }
+  };
 
   onChange = (e) => {
     this.setState({ roomToken: e.target.value });
+  };
+
+  setRoomToken = () => {
+    sessionStorage.setItem("roomToken", this.state.roomToken);
+    socketClient.emit("createRoom", this.state.roomToken);
   };
 
   render() {
@@ -44,7 +50,7 @@ class Home extends Component {
               className="btn btn-primary"
               to={{
                 pathname: "/room",
-                roomToken: this.state.roomToken,
+                // roomToken: this.state.roomToken,
               }}
             >
               Go to room
