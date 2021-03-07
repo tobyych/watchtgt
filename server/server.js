@@ -7,7 +7,7 @@ const io = require("socket.io")(server);
 const port = 3001;
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.sendFile(__dirname + '/index.html');
 });
 
 app.use(function (req, res, next) {
@@ -31,35 +31,46 @@ app.use(function (req, res, next) {
   next();
 });
 
-io.sockets.on("connection", (socket) => {
-  console.log("a user connected");
+io.sockets.on('connection', (socket) => {
+  socket.broadcast.emit('hi');
 
-  socket.on("createRoom", (roomToken) => {
-    socket.join(roomToken, () => {
-      socket.on("roomChat", (roomToken, message) => {
-        socket.to(roomToken).emit(message);
-      });
-
-      socket.on("videoControl", (roomToken, isPlay) => {
-        console.log(roomToken);
-        console.log(isPlay);
-        socket.to(roomToken).emit(isPlay);
-      });
-
-      socket.on("addToPlaylist", (roomToken, playlistItem) => {
-        console.log(roomToken);
-        console.log(playlistItem);
-        socket.to(roomToken).broadcast.emit("addToPlaylist", playlistItem);
-      });
-    });
-    socket.to(roomToken).broadcast.emit(`Welcome to room ${roomToken}`);
-    console.log("welcome");
-  });
-
-  socket.on("disconnect", () => {
-    console.log("a user disconnected");
+  socket.on('chat message', (msg) => {
+    console.log('message: ' + msg);
+    io.emit('chat message', msg)
   });
 });
+
+// io.sockets.on("connection", (socket) => {
+//   console.log("a user connected");
+
+
+
+//   socket.on("createRoom", (roomToken) => {
+//     socket.join(roomToken, () => {
+//       socket.on("roomChat", (roomToken, message) => {
+//         socket.to(roomToken).emit(message);
+//       });
+
+//       socket.on("videoControl", (roomToken, isPlay) => {
+//         console.log(roomToken);
+//         console.log(isPlay);
+//         socket.to(roomToken).emit(isPlay);
+//       });
+
+//       socket.on("addToPlaylist", (roomToken, playlistItem) => {
+//         console.log(roomToken);
+//         console.log(playlistItem);
+//         socket.to(roomToken).broadcast.emit("addToPlaylist", playlistItem);
+//       });
+//     });
+//     socket.to(roomToken).broadcast.emit(`Welcome to room ${roomToken}`);
+//     console.log("welcome");
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log("a user disconnected");
+//   });
+// });
 
 server.listen(port, () => {
   console.log(`Example app listening at port http://localhost:${port}`);

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Socket.IO chat</title>
+  <style>
+    body {
+      margin: 0;
+      padding-bottom: 3rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .container {
+      display: grid;
+      grid-template-rows: [row1-start] 3rem [row1-end row2-start] auto [row2-end row3-start] 3rem [row3-end];
+      grid-template-areas:
+        "header"
+        "main"
+        "footer";
+    }
+
+    #msgForm {
+      grid-area: footer;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 0.25rem;
+      display: flex;
+      height: 3rem;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+    }
+
+    #tokenForm {
+      grid-area: header;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 0.25rem;
+      display: flex;
+      height: 3rem;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+    }
+
+    #tokenInput {
+      border: none;
+      padding: 0 1rem;
+      flex-grow: 1;
+      border-radius: 2rem;
+      margin: 0.25rem;
+    }
+
+    #tokenInput:focus {
+      outline: none;
+    }
+
+    #msgInput {
+      border: none;
+      padding: 0 1rem;
+      flex-grow: 1;
+      border-radius: 2rem;
+      margin: 0.25rem;
+    }
+
+    #msgInput:focus {
+      outline: none;
+    }
+
+    button {
+      background: #333;
+      border: none;
+      padding: 0 1rem;
+      margin: 0.25rem;
+      border-radius: 3px;
+      outline: none;
+      color: #fff;
+    }
+
+    #messages {
+      grid-area: main;
+      overflow: auto;
+      height: 300px;
+      /* height: 100%; */
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #messages>li {
+      padding: 0.5rem 1rem;
+    }
+
+    #messages>li:nth-child(odd) {
+      background: #efefef;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <form id="tokenForm" action="">
+      <input id="tokenInput" autocomplete=" off" /><button>Set</button>
+    </form>
+    <ul id="messages"></ul>
+    <form id="msgForm" action="">
+      <input id="msgInput" autocomplete="off" /><button>Send</button>
+    </form>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+
+    var form = document.getElementById('msgForm');
+    var input = document.getElementById('msgInput');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+      }
+    });
+
+    socket.on('chat message', function (msg) {
+      var item = document.createElement('li');
+      item.textContent = msg;
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+  </script>
+</body>
+
+</html>
