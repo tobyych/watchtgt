@@ -32,12 +32,20 @@ app.use(function (req, res, next) {
 });
 
 io.sockets.on('connection', (socket) => {
+  console.log('a user connected.');
   socket.broadcast.emit('hi');
 
-  socket.on('chat message', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('chat message', msg)
+  socket.on('privateMessage', (roomToken, chatMessage) => {
+    io.to(roomToken.toString()).emit('chatMessage', chatMessage);
   });
+
+  socket.on('joinRoom', (roomToken) => {
+    socket.join(roomToken.toString());
+  })
+
+  socket.on('disconnect', () => {
+    console.log('a user disconnected.');
+  })
 });
 
 // io.sockets.on("connection", (socket) => {
