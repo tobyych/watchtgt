@@ -9,7 +9,7 @@ import "./Home.css";
 
 class Home extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       roomToken: "",
       randomToken: "",
@@ -17,8 +17,8 @@ class Home extends Component {
   }
 
   createRoom = () => {
-    const randomNumber = Math.floor(Math.random() * 90000) + 10000;
-    this.setState({ randomToken: `${randomNumber}` });
+    const randomToken = Math.random().toString(16).substr(2, 5)
+    this.setState({ randomToken: `${randomToken}` });
   };
 
   onChange = (e) => {
@@ -27,7 +27,7 @@ class Home extends Component {
 
   setRoomToken = () => {
     sessionStorage.setItem("roomToken", this.state.roomToken);
-    socketClient.emit("createRoom", this.state.roomToken);
+    socketClient.emit("joinRoom", this.state.roomToken);
   };
 
   render() {

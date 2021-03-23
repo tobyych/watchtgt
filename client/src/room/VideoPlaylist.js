@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { ListGroup, Button } from "reactstrap";
 
-import socketClient from "../apis/socketClient";
+import socket from "../apis/socketClient";
 
 import "./VideoPlaylist.css";
 
 export class VideoPlaylist extends Component {
+  _isMounted = false;
+
   constructor() {
     super();
     this.state = {
@@ -15,15 +17,15 @@ export class VideoPlaylist extends Component {
   }
 
   appendPlaylistItem = () => {
-    socketClient.emit(
+    console.log(socket.id)
+    socket.emit(
       "addToPlaylist",
       sessionStorage.getItem("roomToken"),
       this.state.playlistInput
     );
     this.setState({
-      playlist: [...this.state.playlist, this.state.playlistInput],
-      playlistInput: "",
-    });
+      playlistInput: ""
+    })
   };
 
   changeInput = (e) => {
@@ -53,12 +55,20 @@ export class VideoPlaylist extends Component {
     });
   }
 
-  componentWillMount() {
-    socketClient.on("addToPlaylist", (roomToken, playlistItem) => {
-      console.log(roomToken);
-      console.log(playlistItem);
+  componentDidMount() {
+    this._isMounted = true;
+
+    socket.on("addToPlaylist", (playlistItem) => {
+      if (this._isMounted) {
+        this.setState({
+          playlist: [...this.state.playlist, playlistItem],
+        });
+      }
     });
-    this.forceUpdate();
+  }
+  
+  componentWillUnmount = () => {
+    this._isMounted = false;
   }
 
   render() {

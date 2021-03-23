@@ -48,37 +48,34 @@ io.sockets.on('connection', (socket) => {
   })
 });
 
-// io.sockets.on("connection", (socket) => {
-//   console.log("a user connected");
+io.sockets.on("connection", (socket) => {
+  console.log("a user connected");
 
+  socket.on("joinRoom", (roomToken) => {
+    socket.join(roomToken);
+    socket.to(roomToken).broadcast.emit(`Welcome to room ${roomToken}`);
+    console.log("welcome");
+  });
+  
+  socket.on("roomChat", (roomToken, message) => {
+    socket.to(roomToken).emit('chatMessage', message);
+  });
 
+  socket.on("videoControlRequest", (roomToken, isPlay) => {
+    socket.to(roomToken).emit('videoControl', isPlay);
+  });
 
-//   socket.on("createRoom", (roomToken) => {
-//     socket.join(roomToken, () => {
-//       socket.on("roomChat", (roomToken, message) => {
-//         socket.to(roomToken).emit(message);
-//       });
+  socket.on("addToPlaylist", (roomToken, playlistItem) => {
+    console.log(roomToken, playlistItem);
+    console.log(io.sockets.adapter.rooms);
+    io.sockets.to(roomToken.toString()).emit("addToPlaylist", playlistItem);
+    //socket.emit("addToPlaylist", playlistItem);
+  });
 
-//       socket.on("videoControl", (roomToken, isPlay) => {
-//         console.log(roomToken);
-//         console.log(isPlay);
-//         socket.to(roomToken).emit(isPlay);
-//       });
-
-//       socket.on("addToPlaylist", (roomToken, playlistItem) => {
-//         console.log(roomToken);
-//         console.log(playlistItem);
-//         socket.to(roomToken).broadcast.emit("addToPlaylist", playlistItem);
-//       });
-//     });
-//     socket.to(roomToken).broadcast.emit(`Welcome to room ${roomToken}`);
-//     console.log("welcome");
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log("a user disconnected");
-//   });
-// });
+  socket.on("disconnect", () => {
+    console.log("a user disconnected");
+  });
+});
 
 server.listen(port, () => {
   console.log(`Example app listening at port http://localhost:${port}`);
