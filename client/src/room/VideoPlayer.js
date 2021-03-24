@@ -1,13 +1,16 @@
 import React, { Component, Fragment } from "react";
 
 import VideoControl from "./VideoControl";
+import socket from "../apis/socketClient";
 
 import Youtube from "react-youtube";
 import "./VideoPlayer.css";
 
+
 class VideoPlayer extends Component {
   state = {
     player: null,
+    videoId: ''
   };
 
   onReady = (e) => {
@@ -15,6 +18,12 @@ class VideoPlayer extends Component {
       player: e.target,
     });
   };
+
+  componentDidMount = () => {
+    socket.on('changeVideo', (videoId) => {
+      this.setState({ videoId: videoId })
+    })
+  }
 
   render() {
     const opts = {
@@ -35,7 +44,7 @@ class VideoPlayer extends Component {
         <div className="video-wrapper">
           <Youtube
             className="video"
-            videoId={this.props.videoId}
+            videoId={this.state.videoId}
             opts={opts}
             onReady={this.onReady}
           />

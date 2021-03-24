@@ -17,7 +17,6 @@ export class VideoPlaylist extends Component {
   }
 
   appendPlaylistItem = () => {
-    console.log(socket.id)
     socket.emit(
       "addToPlaylist",
       sessionStorage.getItem("roomToken"),
@@ -32,9 +31,15 @@ export class VideoPlaylist extends Component {
     this.setState({ playlistInput: e.target.value });
   };
 
-  changeVideo = (idx) => {
+  sendChangeVideoRequest = (idx) => {
     //TODO: change the VideoPlayer's state and let it re-render
-    this.props.setVideoId(this.state.playlist[idx]);
+    console.log('changing video...')
+    socket.emit(
+      "changeVideoRequest",
+      sessionStorage.getItem("roomToken"),
+      this.state.playlist[idx]
+    );
+    // this.props.setVideoId(this.state.playlist[idx]);
   };
 
   listItems() {
@@ -45,7 +50,7 @@ export class VideoPlaylist extends Component {
           <div className="playlist-item-append">
             <Button
               className="playlist-item-button"
-              onClick={() => this.changeVideo(idx)}
+              onClick={() => this.sendChangeVideoRequest(idx)}
             >
               Go
             </Button>
@@ -66,7 +71,8 @@ export class VideoPlaylist extends Component {
       }
     });
   }
-  
+
+  // fix to <Warning: Can't perform a React state update on an unmounted component.>
   componentWillUnmount = () => {
     this._isMounted = false;
   }
