@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const host = "http://10.222.242.117:3001";
+const host = "http://localhost:3001";
 
 const socket = io(host);
 
