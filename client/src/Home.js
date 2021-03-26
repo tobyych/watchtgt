@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import socketClient from "./apis/socketClient";
 
-import { Button, InputGroup, Input, InputGroupAddon } from "reactstrap";
+import { InputGroup, Input, InputGroupAddon } from "reactstrap";
 
 import { Link } from "react-router-dom";
 
@@ -17,8 +17,13 @@ class Home extends Component {
   }
 
   createRoom = () => {
-    const randomToken = Math.random().toString(16).substr(2, 5)
-    this.setState({ randomToken: `${randomToken}` });
+    var randomToken = '';
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    for (var i = 0; i < 5; i++) {
+      randomToken += letters.charAt(Math.floor(Math.random() * letters.length))
+    }
+    sessionStorage.setItem("roomToken", randomToken);
+    socketClient.emit("joinRoom", randomToken);
   };
 
   onChange = (e) => {
@@ -33,10 +38,14 @@ class Home extends Component {
   render() {
     return (
       <div className="home-container">
-        <Button onClick={this.createRoom} className="button">
-          Create a room
-        </Button>
-        <p>{this.state.randomToken}</p>
+        <Link
+          type="button"
+          className="btn btn-secondary"
+          onClick={this.createRoom}
+          to={{ pathname: "/room" }}
+        >
+          Create Room
+        </Link>
         <InputGroup className="input-grp">
           <Input
             placeholder="Enter a room token"
@@ -49,8 +58,7 @@ class Home extends Component {
               type="button"
               className="btn btn-primary"
               to={{
-                pathname: "/room",
-                // roomToken: this.state.roomToken,
+                pathname: "/room"
               }}
             >
               Go to room
